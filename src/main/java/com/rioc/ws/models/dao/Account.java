@@ -2,9 +2,11 @@ package com.rioc.ws.models.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table (name = "accounts")
@@ -28,6 +30,8 @@ public class Account implements Serializable {
     @Column(name = "last_name")
     private String lastName;
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Bank> banks;
 
     public Account(int accountId, String firstName, String lastName, Address address) {
         this.accountId = accountId;
@@ -38,6 +42,14 @@ public class Account implements Serializable {
 
     public Account() {
 
+    }
+
+    public Set<Bank> getBanks() {
+        return banks;
+    }
+
+    public void setBanks(Set<Bank> banks) {
+        this.banks = banks;
     }
 
     public Address getAddress() {

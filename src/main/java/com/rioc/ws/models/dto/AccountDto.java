@@ -1,5 +1,6 @@
 package com.rioc.ws.models.dto;
 
+import com.rioc.ws.models.dao.Bank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +23,9 @@ public class AccountDto {
     private String lastName;
 
     private AddressDto address;
+
+    private BankDto bank;
+
+
+
 }
