@@ -73,29 +73,29 @@ public class Bank {
             return bankCode;
         }
 
-    public Bank(int bankId, String bankName, String bankCode, String bankIban, String bankCountryCode, String bankAddress, String bankPhone, String bankEmail, Account account) {
-        this.bankId = bankId;
-        this.bankName = bankName;
-        this.bankCode = bankCode;
-        this.bankIban = bankIban;
-        this.bankCountryCode = bankCountryCode;
-        this.bankAddress = bankAddress;
-        this.bankPhone = bankPhone;
-        this.bankEmail = bankEmail;
-        this.account = account;
-    }
-
-    public String getBankCountryCode() {
-        return bankCountryCode;
-    }
-
-    public void setBankCountryCode(String bankCountryCode) {
-        this.bankCountryCode = bankCountryCode;
-    }
-
-    public void setBankCode(String bankCode) {
+        public Bank(int bankId, String bankName, String bankCode, String bankIban, String bankCountryCode, String bankAddress, String bankPhone, String bankEmail, Account account) {
+            this.bankId = bankId;
+            this.bankName = bankName;
             this.bankCode = bankCode;
+            this.bankIban = bankIban;
+            this.bankCountryCode = bankCountryCode;
+            this.bankAddress = bankAddress;
+            this.bankPhone = bankPhone;
+            this.bankEmail = bankEmail;
+            this.account = account;
         }
+
+        public String getBankCountryCode() {
+            return bankCountryCode;
+        }
+
+        public void setBankCountryCode(String bankCountryCode) {
+            this.bankCountryCode = bankCountryCode;
+        }
+
+        public void setBankCode(String bankCode) {
+                this.bankCode = bankCode;
+            }
 
 
         public void setAccount(Account account) {
@@ -118,21 +118,21 @@ public class Bank {
             this.bankName = bankName;
         }
 
-    public String getBankIban() {
-        return bankIban;
-    }
-
-    public void setBankIban(String bankIban) {
-        this.bankIban = bankIban;
-    }
-
-    public Account getAccount() {
-        return account;
-    }
-
-    public String getBankAddress() {
-            return bankAddress;
+        public String getBankIban() {
+            return bankIban;
         }
+
+        public void setBankIban(String bankIban) {
+            this.bankIban = bankIban;
+        }
+
+        public Account getAccount() {
+            return account;
+        }
+
+        public String getBankAddress() {
+                return bankAddress;
+            }
 
         public void setBankAddress(String bankAddress) {
             this.bankAddress = bankAddress;

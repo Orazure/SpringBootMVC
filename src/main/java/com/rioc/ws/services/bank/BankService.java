@@ -75,15 +75,25 @@ public class BankService implements IBankService {
         bankRepository.deleteById(id);
     }
 
+    public Bank updateBank(BankDto bank, int id) {
+        Bank bank1 = bankRepository.findById(id).orElseThrow(() -> new ApiException("Bank not found", HttpStatus.NOT_FOUND));
+        if(bank.getBankIban() != null)
+            bank1.setBankIban(bank.getBankIban());
+        if(bank.getBankName() != null)
+            bank1.setBankName(bank.getBankName());
+        if(bank.getBankCountryCode() != null)
+            bank1.setBankCountryCode(bank.getBankCountryCode());
+        if(bank.getBankCode() != null)
+            bank1.setBankCode(bank.getBankCode());
+        return bankRepository.save(bank1);
+    }
+
     @Override
     public Bank deleteBank(Bank bank) {
         return null;
     }
 
-    @Override
-    public Bank updateBank(Bank bank) {
-        return null;
-    }
+
 
 
     //encrypting iban with CYPHER algorithm

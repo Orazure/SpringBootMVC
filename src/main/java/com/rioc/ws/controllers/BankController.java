@@ -57,6 +57,12 @@ public class BankController {
         return bankService.getAllBanks();
     }
 
+    //update a bank
+    @PutMapping("/banks/{id}")
+    public Bank updateBank(@Valid @RequestBody BankDto bank, @PathVariable int id)
+    {
+        return bankService.updateBank(bank,id);
+    }
 
 
 }
