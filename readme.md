@@ -90,11 +90,14 @@ services:
 volumes:
   my-db:
 ```
-And run the following command to run it:
-
+And run the following command to run it (in the same directory as the docker-compose.yml file):
 ```
 docker-compose up -d
 ```
+If, you want to check your database, you can go to the following link : http://localhost:8081/
+![img_1.png](img_1.png)
+Username:root
+Password:root
 
 Explanation of the **Account** and **Bank** and **address** entities:
 ```
