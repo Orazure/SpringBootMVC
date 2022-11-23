@@ -16,4 +16,9 @@ import java.io.Serializable;
 public class BankDto {
     private String bankName;
     private String bankIban;
+    private String bankCountryCode;
+    private String bankCode;
+
+
+
 }

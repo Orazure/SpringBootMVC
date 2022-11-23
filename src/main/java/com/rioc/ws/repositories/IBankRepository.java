@@ -11,10 +11,13 @@ import java.util.List;
 public interface IBankRepository extends JpaRepository<Bank,Integer>{
     List<Bank> findByBankIban(String bankIban);
 
-    // get id account
-    @Query("SELECT a.accountId FROM Account a WHERE a.accountId = ?1")
-    int getAccountId(int accountId);
 
+    // get id account
+    @Query("SELECT a FROM Bank a WHERE a.account.accountId = ?1")
+    List<Bank> findByAccountId(int accountId);
+
+    @Query("SELECT a FROM Bank a WHERE a.account.accountId = ?1")
+    int findByAccountId1(int accountId);
 
 
 }

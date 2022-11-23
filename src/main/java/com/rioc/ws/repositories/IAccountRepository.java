@@ -12,4 +12,9 @@ public interface IAccountRepository extends JpaRepository<Account,Integer>{
     List<Account> findByLastName(String lastName);
     List<Account> findByfirstName(String firstName);
     List<Account> findByFirstNameAndLastName(String firstName, String lastName);
+
+    // get id account
+    @Query("SELECT a FROM Account a WHERE a.accountId = ?1")
+    List<Account> findByAccountId(int accountId);
+
 }

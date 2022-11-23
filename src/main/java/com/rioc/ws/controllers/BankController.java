@@ -37,9 +37,9 @@ public class BankController {
 
     // get a bank by id
     @GetMapping("/banks/{id}")
-    public ResponseEntity<Bank> getBankById(@PathVariable int id)
+    public List<BankDto> getBankByAccountId(@PathVariable int id)
     {
-        return new ResponseEntity<>(bankService.getBankById(id), HttpStatus.OK);
+        return bankService.getBankById(id);
     }
 
     //delete a bank by id
@@ -47,7 +47,7 @@ public class BankController {
     public ResponseEntity<String> deleteBankById(@PathVariable int id)
     {
         bankService.deleteBankById(id);
-        return new ResponseEntity<>("Deletion OK", HttpStatus.OK);
+        return new ResponseEntity<>("Delete OK", HttpStatus.OK);
     }
 
     //get all banks

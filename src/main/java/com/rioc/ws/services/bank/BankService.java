@@ -7,12 +7,13 @@ import com.rioc.ws.models.dao.Bank;
 import com.rioc.ws.models.dto.BankDto;
 import com.rioc.ws.repositories.IAccountRepository;
 import com.rioc.ws.repositories.IBankRepository;
-import com.rioc.ws.services.account.IAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import org.iban4j.*;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -22,6 +23,9 @@ public class BankService implements IBankService {
     private final IBankRepository bankRepository;
     private final IAccountRepository accountRepository;
 
+
+
+
     public BankService(IBankRepository bankRepository, IBankMapper bankMapper, IAccountRepository accountRepository) {
         super();
         this.bankRepository = bankRepository;
@@ -30,23 +34,26 @@ public class BankService implements IBankService {
     }
 
     public BankDto postBank(BankDto bank, int idAccount) {
-        System.out.println("idAccount : " + idAccount);
-        int idA=bankRepository.getAccountId(idAccount);
-        System.out.println("idA : " + idA);
-        String iban=bank.getBankIban();
-        System.out.println("iban : " + iban);
+        int idA=bankRepository.findByAccountId1(idAccount);
         // if ida exist in account table
         if(idA==idAccount) {
-            //get object account
-            if(checkBankIban(bank.getBankIban())){
-                Account acc=accountRepository.getReferenceById(idAccount);
-                Bank bank1 = bankMapper.bankDtoToBank(bank);
-                bank1.setAccount(acc);
-                bankRepository.save(bank1);
-                return bank;
-            }else{
-                System.out.println("Iban ne respecte pas le format");
-                throw new ApiException("Iban ne respecte pas le format", HttpStatus.NOT_ACCEPTABLE);
+            // if iban is not exist in bank table
+            String ibanIsExist = bankRepository.findByBankIban(bank.getBankIban()).toString();
+            if (Objects.equals(ibanIsExist, "[]")) {
+                //get object bank and save it
+                if (checkBankIban(bank.getBankIban())) {
+                    Account acc = accountRepository.getReferenceById(idAccount);
+                    Bank bank1 = bankMapper.bankDtoToBank(bank);
+                    bank1.setAccount(acc);
+                    bankRepository.save(bank1);
+                    return bank;
+                } else {
+                    System.out.println("Iban ne respecte pas le format");
+                    throw new ApiException("Iban ne respecte pas le format", HttpStatus.NOT_ACCEPTABLE);
+                }
+            } else {
+                System.out.println("Iban existe déjà");
+                throw new ApiException("Iban existe déjà", HttpStatus.NOT_ACCEPTABLE);
             }
         }
         return null;
@@ -58,8 +65,10 @@ public class BankService implements IBankService {
 
 
 
-    public Bank getBankById(int id) {
-        return bankRepository.getReferenceById(id);
+    public List<BankDto> getBankById(int id) {
+        accountRepository.findById(id).orElseThrow(() -> new ApiException("Bank not found", HttpStatus.NOT_FOUND));
+        List<Bank> banksList = bankRepository.findByAccountId(id);
+        return banksList.stream().map(bankMapper::bankToDtoBank).toList();
     }
 
     public void deleteBankById(int id) {
@@ -77,28 +86,38 @@ public class BankService implements IBankService {
     }
 
 
+    //encrypting iban with CYPHER algorithm
+    // a refaire car cest les meme methodes ajouter le code vu sur le net
+//    public String encryptIban(String iban) throws Exception {
+//        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+//        keyGenerator.init(128);
+//        Key key = keyGenerator.generateKey();
+//        Cipher cipher = Cipher.getInstance("AES");
+//        cipher.init(Cipher.ENCRYPT_MODE, key);
+//        byte[] encrypted = cipher.doFinal(iban.getBytes());
+//        return new String(encrypted);
+//    }
+//    // decrypting iban with CYPHER algorithm
+//    public String decryptIban(String iban) throws Exception {
+//        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+//        keyGenerator.init(128);
+//        Key key = keyGenerator.generateKey();
+//        Cipher cipher = Cipher.getInstance("AES");
+//        cipher.init(Cipher.DECRYPT_MODE, key);
+//        byte[] encrypted = cipher.doFinal(iban.getBytes());
+//        return new String(encrypted);
+//    }
+
     //check if bankIban respect the format of bankIban (FR00 0000 0000 0000 0000 0000 000)
     public boolean checkBankIban(String bankIban) {
-        if (bankIban.length() != 27)
+        try {
+            IbanUtil.validate(bankIban);
+            return true;
+            // valid
+        } catch (IbanFormatException |
+                 InvalidCheckDigitException |
+                 UnsupportedCountryException e) {
             return false;
-        if (bankIban.charAt(2) != ' ')
-            return false;
-        if (bankIban.charAt(5) != ' ')
-            return false;
-        if (bankIban.charAt(8) != ' ')
-            return false;
-        if (bankIban.charAt(11) != ' ')
-            return false;
-        if (bankIban.charAt(14) != ' ')
-            return false;
-        if (bankIban.charAt(17) != ' ')
-            return false;
-        if (bankIban.charAt(20) != ' ')
-            return false;
-        if (bankIban.charAt(23) != ' ')
-            return false;
-        if (bankIban.charAt(26) != ' ')
-            return false;
-        return true;
+        }
     }
 }

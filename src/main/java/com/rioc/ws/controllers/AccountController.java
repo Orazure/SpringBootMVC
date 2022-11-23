@@ -1,6 +1,7 @@
 package com.rioc.ws.controllers;
 
 import com.rioc.ws.models.dao.Account;
+import com.rioc.ws.models.dto.AccountCreateUpdate;
 import com.rioc.ws.models.dto.AccountDto;
 import com.rioc.ws.services.account.IAccountService;
 import org.springframework.http.HttpStatus;
@@ -16,8 +17,6 @@ import javax.validation.Valid;
 public class AccountController
 {
     private IAccountService service;
-
-    //private IAdressService adressService;
 
     public AccountController(IAccountService service)
     {
@@ -53,12 +52,12 @@ public class AccountController
     }
 
     @DeleteMapping("/account")
-    public Account deleteAccount(@RequestBody Account account){
-        return service.deleteAccount(account);
+    public Account deleteAllAccount(){
+        return service.deleteAllAccount();
     }
 
-    @PutMapping("/account")
-    public Account updateAccount(@RequestBody Account account){
-        return service.updateAccount(account);
+    @PutMapping("/account/{idAccount}")
+    public Account updateAccount(@RequestBody AccountCreateUpdate account, @PathVariable int idAccount){
+        return service.updateAccount(account,idAccount);
     }
 }

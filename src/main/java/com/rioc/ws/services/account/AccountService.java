@@ -1,8 +1,11 @@
 package com.rioc.ws.services.account;
 
 import com.rioc.ws.exceptions.ApiException;
+import com.rioc.ws.mappers.IAccountCreateUpdate;
 import com.rioc.ws.mappers.IAccountMapper;
+import com.rioc.ws.mappers.IAddressMapper;
 import com.rioc.ws.models.dao.Account;
+import com.rioc.ws.models.dto.AccountCreateUpdate;
 import com.rioc.ws.models.dto.AccountDto;
 import com.rioc.ws.repositories.IAccountRepository;
 import com.rioc.ws.services.address.IAdressService;
@@ -18,12 +21,17 @@ public class AccountService implements IAccountService {
     private final IAccountMapper mapper;
 
     private final IAdressService adressService;
+    private final IAddressMapper addressMapper;
 
-    public AccountService(IAccountRepository repository, IAccountMapper mapper, IAdressService adressService) {
+    private final IAccountCreateUpdate accountCreateUpdate;
+
+    public AccountService(IAccountRepository repository, IAccountMapper mapper, IAdressService adressService, IAddressMapper addressMapper, IAccountCreateUpdate accountCreateUpdate) {
         super();
         this.repository = repository;
         this.mapper = mapper;
         this.adressService = adressService;
+        this.addressMapper = addressMapper;
+        this.accountCreateUpdate = accountCreateUpdate;
     }
 
 
@@ -53,22 +61,41 @@ public class AccountService implements IAccountService {
     @Override
     public void deleteAccountById(int idAccount) {
         Account account = repository.findById(idAccount).orElse(null);
-        if (account == null)
-            return;
+        if(account == null)
+            throw new ApiException("The account does not exist.", HttpStatus.NOT_FOUND);
         repository.deleteById(idAccount);
     }
 
-    public Account deleteAccount(Account account){
-        repository.delete(account);
-        return account;
+    public Account deleteAllAccount(){
+        repository.deleteAll();
+        return null;
     }
 
+
     public List<AccountDto> getAllAccounts(){
+        //get all accounts with bank
         return repository.findAll().stream().map(mapper::accountToDtoAccount).collect(Collectors.toList());
     }
 
-    public Account updateAccount(Account account){
-        return repository.save(account);
+    public Account updateAccount(AccountCreateUpdate account, int idAccount) {
+        // update account and search if the account exist and the account variable is changed
+        Account account1 = repository.findById(idAccount).orElse(null);
+        if (account1 == null) {
+            System.out.println("Le compte n'existe pas");
+            throw new ApiException("The address is not valid.", HttpStatus.NOT_ACCEPTABLE);
+        }
+        if (account1.equals(accountCreateUpdate.accountDtoToAccount(account))){
+            System.out.println("Aucun changement sur le compte");
+            throw new ApiException("The address is not valid.", HttpStatus.NOT_ACCEPTABLE);
+        }
+        if (!adressService.CheckExistingAdress(account.getAddress())) {
+            System.out.println("adresse non valide");
+            throw new ApiException("The address is not valid.", HttpStatus.NOT_ACCEPTABLE);
+        }
+        account1.setFirstName(account.getFirstName());
+        account1.setLastName(account.getLastName());
+        account1.setAddress(addressMapper.addressDtoToAddress(account.getAddress()));
+        return repository.save(account1);
     }
 
     private boolean checkExistingAccount (String accountFirstName, String accountLastName){

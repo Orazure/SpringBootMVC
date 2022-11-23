@@ -10,7 +10,7 @@ public interface IBankService {
 
     public BankDto postBank(BankDto bank, int idAccount);
 
-    public Bank getBankById(int idBank);
+    public List<BankDto> getBankById(int idBank);
 
 
     public void deleteBankById(int idBank);

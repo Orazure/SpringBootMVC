@@ -1,7 +1,13 @@
 package com.rioc.ws.models.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import org.hibernate.annotations.ColumnTransformer;
+import com.rioc.ws.models.AttributeEncryptor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,6 +16,8 @@ import java.io.Serializable;
 @Entity
 @Table (name = "bank")
 public class Bank {
+        // set utf8_general_ci for the table
+
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +29,22 @@ public class Bank {
         private String bankName;
 
         @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "bank_code")
+        private String bankCode;
+
+        //encryted iban
+
+
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Convert(converter = AttributeEncryptor.class)
+//        @ColumnTransformer(forColumn = "bank_iban",read = "AES_DECRYPT(bank_iban, 'secret') as char(255))",write = "AES_ENCRYPT(?,'secret')")
+////        @ColumnTransformer(forColumn = "bank_iban", read = "aes_decrypt(bank_iban, 'mySecret')")
         @Column(name = "bank_iban")
         private String bankIban;
+
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "bank_Country_code")
+        private String bankCountryCode;
 
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "bank_address")
@@ -38,6 +60,8 @@ public class Bank {
 
         @ManyToOne
         @JoinColumn(name = "account_id", nullable = false)
+        @OnDelete(action = OnDeleteAction.CASCADE)
+        @JsonIgnore
         private Account account;
 
 
@@ -45,18 +69,33 @@ public class Bank {
         public Bank() {
         }
 
-
-
-        public Bank(int bankId, String bankName, String bankIban, String bankAddress, String bankPhone, String bankEmail, Account account) {
-            this.bankId = bankId;
-            this.bankName = bankName;
-            this.bankIban = bankIban;
-            this.bankAddress = bankAddress;
-            this.bankPhone = bankPhone;
-            this.bankEmail = bankEmail;
-            this.account = account;
+        public String getBankCode() {
+            return bankCode;
         }
 
+    public Bank(int bankId, String bankName, String bankCode, String bankIban, String bankCountryCode, String bankAddress, String bankPhone, String bankEmail, Account account) {
+        this.bankId = bankId;
+        this.bankName = bankName;
+        this.bankCode = bankCode;
+        this.bankIban = bankIban;
+        this.bankCountryCode = bankCountryCode;
+        this.bankAddress = bankAddress;
+        this.bankPhone = bankPhone;
+        this.bankEmail = bankEmail;
+        this.account = account;
+    }
+
+    public String getBankCountryCode() {
+        return bankCountryCode;
+    }
+
+    public void setBankCountryCode(String bankCountryCode) {
+        this.bankCountryCode = bankCountryCode;
+    }
+
+    public void setBankCode(String bankCode) {
+            this.bankCode = bankCode;
+        }
 
 
         public void setAccount(Account account) {
