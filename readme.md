@@ -1,7 +1,7 @@
 # Project Java with Spring Boot
 
 ## Description
-This project is A MVC application with Spring Boot with call API.
+This project is a MVC application with Spring Boot with call API.
 
 
 ## Getting Started
@@ -166,19 +166,16 @@ Some info about the **Account** Controller:
   * Check, if the **iban** and **bank name** and **country code** and **bank code** are changed, and save it in the database
 
 
-
-
-
-### Features 
-
-
 ### Built With
 
 * [Maven](https://maven.apache.org/) - Dependency Management
-* 
-
-
-### Versioning
+* [Docker](https://www.docker.com/) - Container for the database
+* [Spring Boot](https://spring.io/projects/spring-boot) - Framework for the backend
+* [Spring Data JPA](https://spring.io/projects/spring-data-jpa) - Framework for the database
+* [Springfox](https://springfox.github.io/springfox/) - Framework for the API documentation
+* [Lombok](https://projectlombok.org/) - Framework for the getters and setters
+* [MapStruct](https://mapstruct.org/) - Framework for the mapping
+* [Iban4j](https://github.com/arturmkrtchyan/iban4j) - Framework for the iban validation
 
 
 ### Authors
