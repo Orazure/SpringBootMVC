@@ -106,7 +106,7 @@ mvn clean install -DskipTests
 ```
 (If you use Java SDK 17 or higher, you need to add the following line in the pom.xml file)
 You have to change just the number of the java version.
-
+```
 <properties>
 		<java.version>19</java.version>
 	</properties>
