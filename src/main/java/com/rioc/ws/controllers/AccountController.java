@@ -25,7 +25,7 @@ public class AccountController
     }
 
     @PostMapping("/accounts")
-    public ResponseEntity<AccountDto> postAccount (@Valid @RequestBody AccountDto account,BindingResult bindingResult)
+    public ResponseEntity<AccountCreateUpdate> postAccount (@Valid @RequestBody AccountCreateUpdate account,BindingResult bindingResult)
     {
         if(bindingResult.hasErrors())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

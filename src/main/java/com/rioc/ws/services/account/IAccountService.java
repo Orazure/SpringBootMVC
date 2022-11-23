@@ -7,7 +7,7 @@ import com.rioc.ws.models.dto.AccountDto;
 import java.util.List;
 
 public interface IAccountService {
-    public AccountDto postAccount(AccountDto account);
+    public AccountCreateUpdate postAccount(AccountCreateUpdate account);
     public List<AccountDto> getAllAccounts();
     public Account getAccountById(int idAccount);
     public void deleteAccount(int idAccount);

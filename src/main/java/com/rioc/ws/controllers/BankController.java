@@ -37,7 +37,7 @@ public class BankController {
 
     // get a bank by id
     @GetMapping("/banks/{id}")
-    public List<BankDto> getBankByAccountId(@PathVariable int id)
+    public List<BankDto> getBankById(@PathVariable int id)
     {
         return bankService.getBankById(id);
     }
