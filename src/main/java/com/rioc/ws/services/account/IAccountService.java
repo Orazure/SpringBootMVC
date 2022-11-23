@@ -10,7 +10,7 @@ public interface IAccountService {
     public AccountDto postAccount(AccountDto account);
     public List<AccountDto> getAllAccounts();
     public Account getAccountById(int idAccount);
-    public void deleteAccountById(int idAccount);
+    public void deleteAccount(int idAccount);
     public Account deleteAllAccount();
     public Account updateAccount(AccountCreateUpdate account, int idAccount);
 

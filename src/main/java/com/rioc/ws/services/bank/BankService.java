@@ -60,6 +60,9 @@ public class BankService implements IBankService {
     }
 
     public List<BankDto> getAllBanks(){
+        if(bankRepository.findAll().isEmpty()){
+            throw new ApiException("No banks found", HttpStatus.NOT_FOUND);
+        }
         return bankRepository.findAll().stream().map(bankMapper::bankToDtoBank).collect(Collectors.toList());
     }
 
@@ -72,7 +75,17 @@ public class BankService implements IBankService {
     }
 
     public void deleteBankById(int id) {
-        bankRepository.deleteById(id);
+        try {
+            bankRepository.findById(id).orElseThrow(() -> new ApiException("Bank not found", HttpStatus.NOT_FOUND));
+            bankRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new ApiException("Bank not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public Bank deleteBank(Bank bank) {
+        return null;
     }
 
     public Bank updateBank(BankDto bank, int id) {
@@ -88,10 +101,6 @@ public class BankService implements IBankService {
         return bankRepository.save(bank1);
     }
 
-    @Override
-    public Bank deleteBank(Bank bank) {
-        return null;
-    }
 
 
 

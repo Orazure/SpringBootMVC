@@ -36,7 +36,7 @@ public class AccountController
 
     @GetMapping("/accounts")
     public List<AccountDto> getAccounts(){
-
+        //check if they are accounts
         return service.getAllAccounts();
     }
 
@@ -46,9 +46,8 @@ public class AccountController
     }
 
     @DeleteMapping("/account/{idAccount}")
-    public String deleteAccountFromId(@PathVariable int idAccount){
-        service.deleteAccountById(idAccount);
-        return "Deletion OK";
+    public void deleteAccountFromId(@PathVariable int idAccount){
+        service.deleteAccount(idAccount);
     }
 
     @DeleteMapping("/account")

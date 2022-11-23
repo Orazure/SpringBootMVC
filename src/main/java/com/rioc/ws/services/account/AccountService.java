@@ -42,28 +42,36 @@ public class AccountService implements IAccountService {
             System.out.println("existe déjà");
             throw new ApiException("The account arleady exist.", HttpStatus.NOT_ACCEPTABLE);
         }
-
-
         if (!adressService.CheckExistingAdress(account.getAddress())) {
             System.out.println("adresse non valide");
             throw new ApiException("The address is not valid.", HttpStatus.NOT_ACCEPTABLE);
         }
-
         repository.save(mapper.accountDtoToAccount(account));
         return account;
     }
 
 
     public Account getAccountById(int idAccount){
+        Account account = repository.findById(idAccount).orElseThrow(() -> new ApiException("Account not found", HttpStatus.NOT_FOUND));
         return repository.getReferenceById(idAccount);
     }
 
-    @Override
-    public void deleteAccountById(int idAccount) {
-        Account account = repository.findById(idAccount).orElse(null);
-        if(account == null)
-            throw new ApiException("The account does not exist.", HttpStatus.NOT_FOUND);
-        repository.deleteById(idAccount);
+
+    public void deleteAccount(int idAccount){
+        System.out.println("delete account");
+        try {
+            Account account = repository.getReferenceById(idAccount);
+            System.out.println("account : " + account);
+            if (account == null) {
+                System.out.println("account not found");
+                throw new ApiException("Account not found.", HttpStatus.NOT_FOUND);
+            }
+            repository.deleteById(idAccount);
+        } catch (Exception e) {
+            System.out.println("error delete account");
+            throw new ApiException("The account does not exist.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
     }
 
     public Account deleteAllAccount(){
@@ -74,12 +82,15 @@ public class AccountService implements IAccountService {
 
     public List<AccountDto> getAllAccounts(){
         //get all accounts with bank
+        if(repository.findAll().isEmpty()){
+            throw new ApiException("No accounts found", HttpStatus.NOT_FOUND);
+        }
         return repository.findAll().stream().map(mapper::accountToDtoAccount).collect(Collectors.toList());
     }
 
     public Account updateAccount(AccountCreateUpdate account, int idAccount) {
         // update account and search if the account exist and the account variable is changed
-        Account account1 = repository.findById(idAccount).orElse(null);
+        Account account1 = repository.findById(idAccount).orElseThrow(() -> new ApiException("Account not found", HttpStatus.NOT_FOUND));
         if (account1 == null) {
             System.out.println("Le compte n'existe pas");
             throw new ApiException("The address is not valid.", HttpStatus.NOT_ACCEPTABLE);

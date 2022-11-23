@@ -99,6 +99,23 @@ If, you want to check your database, you can go to the following link : http://l
 Username:root
 Password:root
 
+When you have the database, you can run the project with your favorite IDE.
+Before running the project, you need to run the following command to download the dependencies:
+```
+mvn clean install -DskipTests
+```
+(If you use Java SDK 17 or higher, you need to add the following line in the pom.xml file)
+You have to change just the number of the java version.
+
+<properties>
+		<java.version>19</java.version>
+	</properties>
+<source>19</source> <!-- depending on your project -->
+<target>19</target> <!-- depending on your project -->
+```
+The url of the swagger is : http://localhost:8080/swagger-ui/index.html#/
+
+
 Explanation of the **Account** and **Bank** and **address** entities:
 ```
 Account:
