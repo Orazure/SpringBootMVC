@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -66,7 +67,7 @@ public class BankService implements IBankService {
     }
 
     public List<BankDto> getBankById(int id) {
-        List<Bank> banksList = bankRepository.findByAccountId(id);
+        Optional<Bank> banksList = bankRepository.findById(id);
         if(banksList.isEmpty()){
             throw new ApiException("No banks found", HttpStatus.NOT_FOUND);
         }
@@ -82,15 +83,17 @@ public class BankService implements IBankService {
         }
     }
 
-    @Override
-    public Bank deleteBank(Bank bank) {
-        return null;
-    }
+
 
     public Bank updateBank(BankDto bank, int id) {
         Bank bank1 = bankRepository.findById(id).orElseThrow(() -> new ApiException("Bank not found", HttpStatus.NOT_FOUND));
-        if(bank.getBankIban() != null)
-            bank1.setBankIban(bank.getBankIban());
+        if(bank.getBankIban() != null) {
+            if(checkBankIban(bank.getBankIban())) {
+                bank1.setBankIban(bank.getBankIban());
+            } else {
+                throw new ApiException("Iban ne respecte pas le format", HttpStatus.NOT_ACCEPTABLE);
+            }
+        }
         if(bank.getBankName() != null)
             bank1.setBankName(bank.getBankName());
         if(bank.getBankCountryCode() != null)
@@ -98,6 +101,16 @@ public class BankService implements IBankService {
         if(bank.getBankCode() != null)
             bank1.setBankCode(bank.getBankCode());
         return bankRepository.save(bank1);
+    }
+
+    //delete all banks
+    public void deleteAllBank() {
+        bankRepository.deleteAll();
+    }
+
+    @Override
+    public Bank deleteBank(Bank bank) {
+        return null;
     }
 
     //check if bankIban respect the format of bankIban (FR00 0000 0000 0000 0000 0000 000)

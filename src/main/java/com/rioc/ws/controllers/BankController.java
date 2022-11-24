@@ -42,6 +42,12 @@ public class BankController {
         return bankService.getBankById(id);
     }
 
+    // delete all banks
+    @DeleteMapping("/banks")
+    public void deleteAllBanks(){
+        bankService.deleteAllBank();
+    }
+
     //delete a bank by id
     @DeleteMapping("/banks/{id}")
     public ResponseEntity<String> deleteBankById(@PathVariable int id)

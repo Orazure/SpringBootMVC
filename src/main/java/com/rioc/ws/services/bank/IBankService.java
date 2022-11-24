@@ -14,6 +14,8 @@ public interface IBankService {
 
 
     public void deleteBankById(int idBank);
+
+    public void deleteAllBank();
     public Bank deleteBank(Bank bank);
     public Bank updateBank(BankDto bank, int idBank);
 
